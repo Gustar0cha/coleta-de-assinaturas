@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Coleta de Assinaturas
 
-## Getting Started
+Aplicacao mobile-first em Next.js, TypeScript e Tailwind CSS para coletar nome e CPF, validar os dados e registrar apoios em uma planilha Google Sheets via Google Apps Script.
 
-First, run the development server:
+## Instalar
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Rodar localmente
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp .env.example .env.local
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Abra `http://localhost:3000`.
 
-## Learn More
+## Criar a planilha
 
-To learn more about Next.js, take a look at the following resources:
+1. Crie uma planilha no Google Sheets.
+2. Crie uma aba chamada `Assinaturas`.
+3. Na primeira linha, crie as colunas exatamente assim: `DATA/HORA`, `NOME`, `CPF`.
+4. Copie o ID da planilha. Ele fica na URL, entre `/d/` e `/edit`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Configurar o Apps Script
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Na planilha, acesse `Extensoes` > `Apps Script`.
+2. Apague o conteudo inicial do editor.
+3. Cole o conteudo de `google-apps-script/google-apps-script.gs`.
+4. Troque `COLE_AQUI_O_ID_DA_PLANILHA` pelo ID da planilha.
+5. Troque `COLE_AQUI_A_MESMA_CHAVE_DO_ENV` por uma chave longa e aleatoria.
+6. Salve o projeto.
 
-## Deploy on Vercel
+## Publicar como Web App
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. No Apps Script, clique em `Implantar` > `Nova implantacao`.
+2. Escolha o tipo `App da Web`.
+3. Em `Executar como`, selecione sua propria conta.
+4. Em `Quem pode acessar`, selecione `Qualquer pessoa`.
+5. Clique em `Implantar` e autorize as permissoes.
+6. Copie a URL do Web App.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Sempre que alterar o Apps Script, crie uma nova implantacao ou edite a implantacao existente e selecione uma nova versao. A URL do Web App pode continuar a mesma quando voce atualiza a implantacao existente.
+
+## Configurar variaveis locais
+
+Crie `.env.local`:
+
+```env
+GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/SEU_WEB_APP_ID/exec
+API_SECRET=sua-chave-longa-e-aleatoria
+```
+
+`API_SECRET` precisa ser igual ao valor configurado no Apps Script. Essa chave nunca e enviada ao navegador.
+
+## Testar
+
+```bash
+npm run lint
+npm run build
+```
+
+Depois, rode `npm run dev`, envie um CPF valido e confira se uma nova linha apareceu na aba `Assinaturas`.
+
+## Publicar na Vercel
+
+1. Suba o projeto para um repositorio Git.
+2. Importe o repositorio na Vercel.
+3. Configure as variaveis `GOOGLE_SCRIPT_URL` e `API_SECRET` em `Settings` > `Environment Variables`.
+4. Publique o projeto.
+
+## Comportamento implementado
+
+- Mascara de CPF no frontend.
+- Validacao matematica real de CPF no frontend, backend Next.js e Apps Script.
+- Normalizacao do CPF para apenas numeros antes do armazenamento.
+- Confirmacao antes do envio final.
+- Estado de loading e tela de sucesso.
+- Tratamento de CPF duplicado, nome incompleto, CPF invalido, erro de conexao e rate limit.
+- Rate limiting simples por IP no Route Handler.
+- `LockService` no Apps Script para evitar duplicidade em requisicoes simultaneas.
+- Pagina `/privacidade` com explicacao LGPD.
+
+## Observacoes de seguranca
+
+O frontend chama apenas `/api/signatures`. A URL do Apps Script e a chave compartilhada ficam no backend por variaveis de ambiente. Para producao com alto volume, considere trocar o rate limit em memoria por Redis/KV e adicionar Cloudflare Turnstile.
