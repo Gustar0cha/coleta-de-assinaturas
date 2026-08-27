@@ -110,16 +110,8 @@ export function SignatureForm() {
   }
 
   return (
-    <div className="relative w-full overflow-hidden">
-      <Image
-        alt=""
-        aria-hidden="true"
-        className="drone-card-float pointer-events-none absolute right-[-16px] top-[-4px] z-0 h-auto w-[138px] opacity-[0.16] drop-shadow-[0_18px_24px_rgba(4,79,69,0.22)] sm:right-[-8px] sm:w-[150px]"
-        height={120}
-        src="/imagens/drone-3.png"
-        width={180}
-      />
-      <header className="animate-form relative z-10 mb-8">
+    <div className="w-full">
+      <header className="animate-form mb-8">
         <div className="mb-7 flex items-center">
           <Image
             alt="Brasmaquinas"
@@ -151,7 +143,7 @@ export function SignatureForm() {
 
       {step === "form" ? (
         <form
-          className="animate-form relative z-10"
+          className="animate-form"
           noValidate
           onSubmit={handleSubmit(moveToConfirm)}
         >
@@ -225,7 +217,7 @@ export function SignatureForm() {
           </p>
         </form>
       ) : payload ? (
-        <div className="relative z-10">
+        <>
           {submitError ? (
             <p className="mb-5 rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium leading-6 text-red-700">
               {submitError}
@@ -238,7 +230,7 @@ export function SignatureForm() {
             onBack={() => setStep("form")}
             onConfirm={submitSignature}
           />
-        </div>
+        </>
       ) : null}
     </div>
   );
