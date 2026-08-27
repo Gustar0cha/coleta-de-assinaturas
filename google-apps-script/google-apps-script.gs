@@ -1,6 +1,14 @@
 const SPREADSHEET_ID = "1-VwMdhb151MQ-Y5877iPESGK3fCqtFULUKqR1GUcwf0";
 const SHEET_NAME = "Assinaturas";
 const API_SECRET = "d9ea110ac0e544e788db3a9d6814d03be735fbe56eb84057941d541d3481662f";
+const SCRIPT_VERSION = "2026-08-27-cpf-duplicates-v2";
+
+function doGet() {
+  return jsonResponse({
+    success: true,
+    version: SCRIPT_VERSION,
+  });
+}
 
 function doPost(e) {
   const lock = LockService.getScriptLock();
@@ -40,7 +48,7 @@ function doPost(e) {
 
     const nextRow = sheet.getLastRow() + 1;
     sheet.getRange(nextRow, 3).setNumberFormat("@");
-    sheet.getRange(nextRow, 1, 1, 3).setValues([[timestamp, name, cpf]]);
+    sheet.getRange(nextRow, 1, 1, 3).setValues([[timestamp, name, "'" + cpf]]);
 
     return jsonResponse({ success: true });
   } catch (error) {
@@ -86,8 +94,8 @@ function cpfExists(sheet, cpf) {
 function normalizeStoredCpf(value) {
   const digits = onlyDigits(String(value || ""));
 
-  if (digits.length === 10) {
-    return "0" + digits;
+  if (digits.length > 0 && digits.length < 11) {
+    return digits.padStart(11, "0");
   }
 
   return digits;
