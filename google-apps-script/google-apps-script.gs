@@ -38,7 +38,9 @@ function doPost(e) {
       "dd/MM/yyyy HH:mm:ss",
     );
 
-    sheet.appendRow([timestamp, name, cpf]);
+    const nextRow = sheet.getLastRow() + 1;
+    sheet.getRange(nextRow, 3).setNumberFormat("@");
+    sheet.getRange(nextRow, 1, 1, 3).setValues([[timestamp, name, cpf]]);
 
     return jsonResponse({ success: true });
   } catch (error) {
@@ -55,6 +57,8 @@ function getSheet() {
 }
 
 function ensureHeader(sheet) {
+  sheet.getRange("C:C").setNumberFormat("@");
+
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(["DATA/HORA", "NOME", "CPF"]);
     return;
@@ -73,10 +77,20 @@ function cpfExists(sheet, cpf) {
     return false;
   }
 
-  const values = sheet.getRange(2, 3, lastRow - 1, 1).getValues();
+  const values = sheet.getRange(2, 3, lastRow - 1, 1).getDisplayValues();
   return values.some(function (row) {
-    return onlyDigits(String(row[0])) === cpf;
+    return normalizeStoredCpf(row[0]) === cpf;
   });
+}
+
+function normalizeStoredCpf(value) {
+  const digits = onlyDigits(String(value || ""));
+
+  if (digits.length === 10) {
+    return "0" + digits;
+  }
+
+  return digits;
 }
 
 function normalizeName(value) {
