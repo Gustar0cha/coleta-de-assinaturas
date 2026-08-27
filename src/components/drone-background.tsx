@@ -4,12 +4,12 @@ const drones = [
   {
     src: "/imagens/drone-1.png",
     className:
-      "left-[58%] top-[16%] w-20 opacity-55 [animation-delay:-2s] sm:left-[72%] sm:top-[18%] sm:w-28",
+      "left-[76%] top-[14%] hidden w-20 opacity-40 [animation-delay:-2s] sm:block sm:w-28",
   },
   {
     src: "/imagens/drone-2.png",
     className:
-      "left-[12%] top-[69%] w-24 opacity-40 [animation-delay:-8s] sm:left-[54%] sm:top-[68%] sm:w-32",
+      "left-[72%] top-[68%] hidden w-24 opacity-32 [animation-delay:-8s] sm:block sm:w-32",
   },
   {
     src: "/imagens/drone-3.png",

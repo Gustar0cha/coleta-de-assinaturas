@@ -81,10 +81,15 @@ input {
   animation: drone-float 16s ease-in-out infinite;
 }
 
+.drone-card-float {
+  animation: drone-float 12s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-form,
   .animate-success,
-  .drone-float {
+  .drone-float,
+  .drone-card-float {
     animation: none;
   }
 }
