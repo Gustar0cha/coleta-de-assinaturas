@@ -64,3 +64,27 @@ input {
 .animate-success {
   animation: enter-success 260ms ease-out both;
 }
+
+@keyframes drone-float {
+  0% {
+    transform: translate3d(-10px, 4px, 0) rotate(-1.5deg);
+  }
+  50% {
+    transform: translate3d(14px, -12px, 0) rotate(1.5deg);
+  }
+  100% {
+    transform: translate3d(-10px, 4px, 0) rotate(-1.5deg);
+  }
+}
+
+.drone-float {
+  animation: drone-float 16s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-form,
+  .animate-success,
+  .drone-float {
+    animation: none;
+  }
+}

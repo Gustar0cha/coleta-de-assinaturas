@@ -6,6 +6,7 @@ Exemplos de caminhos:
 
 - `public/imagens/logo-brasmaquinas.png` fica disponivel em `/imagens/logo-brasmaquinas.png`
 - `public/imagens/banner.webp` fica disponivel em `/imagens/banner.webp`
+- `public/imagens/drone-1.png` fica disponivel em `/imagens/drone-1.png`
 
 Formatos recomendados:
 
